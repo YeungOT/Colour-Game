@@ -36,8 +36,8 @@
         }
 
         function getColorInterval(speed) {
-            const maxDelay = 3000;
-            const minDelay = 500;
+            const maxDelay = 6000;
+            const minDelay = 1000;
             const factor = (speed - 1) / 9;
             return Math.round(maxDelay - factor * (maxDelay - minDelay));
         }
