@@ -3,16 +3,6 @@
            所有尺寸使用 --ui-scale 統一縮放，與 cognitive-training-pwa 一致。
            ================================================================ */
 
-        /* 主選單：三種模式 */
-        .color-mode-grid {
-            grid-template-columns: repeat(3, 1fr);
-            max-width: calc(860px * var(--ui-scale));
-            gap: calc(24px * var(--ui-scale));
-        }
-        .color-mode-grid .category-btn { min-height: calc(150px * var(--ui-scale)); }
-        .color-mode-grid .category-btn .icon { font-size: calc(56px * var(--ui-scale)); }
-        .color-mode-grid .category-btn .label { font-size: calc(28px * var(--ui-scale)); }
-
         /* 設定頁 */
         .settings-options {
             width: 100%;
