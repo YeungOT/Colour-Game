@@ -1,0 +1,162 @@
+        /* ================================================================
+           底部控制區（移植自 cognitive-training-pwa css/gng.css 共用部分）
+           ================================================================ */
+        .bottom-controls {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            flex-shrink: 0;
+            padding: calc(6px * var(--ui-scale)) 0 calc(2px * var(--ui-scale)) 0;
+            gap: calc(8px * var(--ui-scale));
+            min-height: calc(56px * var(--ui-scale));
+            border-top: calc(2px * var(--ui-scale)) solid var(--border-color);
+            margin-top: calc(4px * var(--ui-scale));
+            padding-top: calc(8px * var(--ui-scale));
+            transition: border-color 0.4s;
+        }
+        .bottom-controls .left-group {
+            display: flex;
+            align-items: center;
+            gap: calc(12px * var(--ui-scale));
+            flex-shrink: 0;
+        }
+        .bottom-controls .center-group {
+            display: flex;
+            align-items: center;
+            gap: calc(30px * var(--ui-scale));
+            justify-content: center;
+        }
+        .bottom-controls .right-group {
+            display: flex;
+            align-items: center;
+            gap: calc(12px * var(--ui-scale));
+            flex-shrink: 0;
+        }
+
+        /* 速度控制 */
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: calc(6px * var(--ui-scale));
+            background: var(--nback-brown);
+            padding: calc(4px * var(--ui-scale)) calc(10px * var(--ui-scale));
+            border-radius: calc(30px * var(--ui-scale));
+            border: none;
+            transition: background 0.3s, border 0.3s;
+            height: var(--control-h);
+        }
+        .speed-btn {
+            width: max(var(--tap-min), calc(28px * var(--ui-scale)));
+            height: max(var(--tap-min), calc(28px * var(--ui-scale)));
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            padding: 0;
+            line-height: 1;
+            box-shadow: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .speed-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+        .speed-btn:active {
+            transform: scale(0.96);
+        }
+        .speed-btn:focus-visible {
+            outline: calc(3px * var(--ui-scale)) solid #ffb300;
+            outline-offset: calc(2px * var(--ui-scale));
+        }
+        .speed-display {
+            min-width: calc(32px * var(--ui-scale));
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+        /* 播放按鈕 (共用) */
+        .play-btn {
+            width: max(var(--tap-min), calc(47px * var(--ui-scale)));
+            height: max(var(--tap-min), calc(47px * var(--ui-scale)));
+            border: none;
+            border-radius: 50%;
+            background: var(--nback-brown);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--btn-transition), border-radius 0.3s;
+            touch-action: manipulation;
+            position: relative;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .play-btn:focus-visible { outline: calc(3px * var(--ui-scale)) solid #ffb300; outline-offset: calc(2px * var(--ui-scale)); }
+        .play-btn:hover { background: #6D4C41; }
+        [data-theme="dark"] .speed-control { background: var(--btn-bg); }
+        [data-theme="dark"] .speed-btn { color: #fff; background: transparent; }
+        [data-theme="dark"] .speed-btn:hover { background: rgba(255, 255, 255, 0.16); }
+        [data-theme="dark"] .play-btn { background: var(--btn-bg); }
+        [data-theme="dark"] .play-btn:hover { background: #1565c0; }
+        .play-btn .play-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            width: calc(20px * var(--ui-scale));
+            height: calc(20px * var(--ui-scale));
+            position: relative;
+        }
+        .play-btn .play-icon .triangle {
+            width: 0;
+            height: 0;
+            border-left: calc(14px * var(--ui-scale)) solid white;
+            border-top: calc(10px * var(--ui-scale)) solid transparent;
+            border-bottom: calc(10px * var(--ui-scale)) solid transparent;
+            transition: all 0.3s ease;
+            margin-left: calc(4.5px * var(--ui-scale));
+        }
+        .play-btn .play-icon .pause-bar {
+            display: none;
+            width: calc(4px * var(--ui-scale));
+            height: calc(18px * var(--ui-scale));
+            background: white;
+            border-radius: calc(2px * var(--ui-scale));
+            transition: all 0.3s ease;
+            position: absolute;
+        }
+        .play-btn .play-icon .pause-bar.left { left: calc(3px * var(--ui-scale)); }
+        .play-btn .play-icon .pause-bar.right { right: calc(3px * var(--ui-scale)); }
+        .play-btn.playing .play-icon .triangle {
+            opacity: 0;
+            transform: scale(0.5) rotate(90deg);
+        }
+        .play-btn.playing .play-icon .pause-bar {
+            display: block;
+            opacity: 1;
+            animation: pauseIn 0.3s ease forwards;
+        }
+        .play-btn:not(.playing) .play-icon .triangle {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+        .play-btn:not(.playing) .play-icon .pause-bar {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        @keyframes pauseIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }

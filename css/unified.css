@@ -1,0 +1,1057 @@
+        /* ================================================================
+           Unified single-page app chrome
+           ================================================================ */
+        .app-screen {
+            width: 100vw;
+            height: 100vh;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        /* Shared overlays sit above active screens but below the side menu. */
+        .overlay {
+            z-index: 2000;
+        }
+
+        .slide-menu-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            display: none;
+            background: rgba(0, 0, 0, 0.55);
+            opacity: 0;
+            pointer-events: auto;
+            touch-action: none;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .slide-menu {
+            z-index: 3001;
+        }
+        .slide-menu.open ~ .slide-menu-backdrop,
+        .slide-menu.dragging ~ .slide-menu-backdrop,
+        .slide-menu.closing ~ .slide-menu-backdrop {
+            display: block;
+        }
+        .slide-menu.open ~ .slide-menu-backdrop {
+            opacity: 1;
+        }
+        .slide-menu.dragging ~ .slide-menu-backdrop {
+            transition: none;
+        }
+
+        /* Unified menu typography across home, food, food category, and N-back mode screens. */
+        #home .menu-title,
+        #mainMenu .menu-title,
+        #foodCategorySelect .menu-title,
+        #nbackModeSelect .menu-title {
+            font-size: calc(56px * var(--ui-scale));
+        }
+        #home .menu-title .brain,
+        #mainMenu .menu-title .brain,
+        #foodCategorySelect .menu-title .brain,
+        #nbackModeSelect .menu-title .brain {
+            font-size: calc(56px * var(--ui-scale));
+        }
+        #home .menu-subtitle,
+        #mainMenu .menu-subtitle,
+        #foodCategorySelect .menu-subtitle,
+        #nbackModeSelect .menu-subtitle {
+            font-size: calc(28px * var(--ui-scale));
+        }
+        #home .category-btn .icon {
+            font-size: calc(56px * var(--ui-scale));
+            margin-bottom: calc(8px * var(--ui-scale));
+        }
+        #home .category-btn .label {
+            font-size: calc(28px * var(--ui-scale));
+        }
+
+        /* Shared menu grid sizing driven by row/column classes. */
+        .category-grid.menu-grid,
+        .home-grid.menu-grid {
+            --menu-gap: calc(18px * var(--ui-scale));
+            --menu-row-gap: var(--menu-gap);
+            --menu-cols: 4;
+            --menu-rows: 1;
+            --menu-width: min(calc(var(--avail-w) - calc(64px * var(--ui-scale))), calc(1240px * var(--ui-scale)));
+            --menu-ref-cols: 4;
+            --menu-chrome-h: calc(300px * var(--ui-scale));
+            --menu-avail-h: calc(var(--avail-h) - var(--menu-chrome-h));
+            --menu-card-min: calc(96px * var(--ui-scale));
+            --menu-row-compact-scale: 1;
+            --menu-card: max(
+                var(--menu-card-min),
+                min(
+                    calc((var(--menu-width) - (var(--menu-ref-cols) - 1) * var(--menu-gap)) / var(--menu-ref-cols)),
+                    calc((var(--menu-avail-h) - (var(--menu-rows) - 1) * var(--menu-row-gap)) / var(--menu-rows))
+                ) * var(--menu-row-compact-scale)
+            );
+            display: grid;
+            grid-template-columns: repeat(var(--menu-cols), var(--menu-card));
+            grid-template-rows: repeat(var(--menu-rows), var(--menu-card));
+            gap: var(--menu-gap);
+            width: calc(var(--menu-cols) * var(--menu-card) + (var(--menu-cols) - 1) * var(--menu-gap));
+            max-width: var(--menu-width);
+            margin: 0 auto;
+        }
+        .menu-grid.menu-cols-4 { --menu-cols: 4; }
+        .menu-grid.menu-cols-2 { --menu-cols: 2; }
+        .menu-grid.menu-rows-1 { --menu-rows: 1; }
+        .menu-grid.menu-rows-2 { --menu-rows: 2; --menu-row-compact-scale: 0.85; }
+        .menu-grid .category-btn {
+            width: var(--menu-card);
+            height: var(--menu-card);
+            min-height: 0;
+            aspect-ratio: auto;
+            padding: calc(18px * var(--ui-scale)) calc(12px * var(--ui-scale));
+        }
+        .menu-grid .category-btn .icon {
+            font-size: calc(66px * var(--ui-scale));
+            margin-bottom: calc(12px * var(--ui-scale));
+        }
+        .menu-grid .category-btn .label {
+            font-size: calc(30px * var(--ui-scale));
+            line-height: 1.15;
+        }
+
+        #mainMenu,
+        #foodCategorySelect,
+        #nbackModeSelect {
+            gap: calc(18px * var(--ui-scale));
+        }
+        #mainMenu .menu-header,
+        #foodCategorySelect .menu-header,
+        #nbackModeSelect .menu-header {
+            margin-bottom: calc(4px * var(--ui-scale));
+        }
+        #mainMenu .menu-subtitle,
+        #foodCategorySelect .menu-subtitle,
+        #nbackModeSelect .menu-subtitle {
+            margin-bottom: calc(24px * var(--ui-scale));
+        }
+
+        /* ================================================================
+           手掌跳飛機 (scoped so it cannot affect the food game controls)
+           ================================================================ */
+        #palm {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        #palm .grid-wrapper {
+            align-items: stretch;
+            padding: calc(8px * var(--ui-scale)) 0;
+        }
+        #palm .game-board {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: var(--palm-dir, row);
+            justify-content: center;
+            align-items: center;
+            gap: calc(14px * var(--ui-scale));
+            min-height: 0;
+            margin: 0 auto;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: none;
+            animation: none;
+        }
+        #palm .side {
+            flex: 0 0 auto;
+            width: var(--palm-side, min(100%, calc(300px * var(--ui-scale))));
+            height: var(--palm-side, min(100%, calc(300px * var(--ui-scale))));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            border-radius: calc(28px * var(--ui-scale));
+            box-shadow: var(--panel-shadow);
+            overflow: hidden;
+            padding: calc(12px * var(--ui-scale));
+            transition: none;
+            animation: none;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        #palm .gesture-image {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--control-bg-nback);
+            border-radius: calc(18px * var(--ui-scale));
+            overflow: hidden;
+            min-width: 0;
+            min-height: 0;
+            transition: none;
+            animation: none;
+            pointer-events: none;
+        }
+        #palm .gesture-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            animation: none;
+        }
+        #palm .gesture-image .error-text {
+            font-size: 1.5rem;
+            color: var(--error-text);
+            background: var(--error-bg);
+            padding: calc(20px * var(--ui-scale));
+            border-radius: calc(20px * var(--ui-scale));
+            text-align: center;
+            font-weight: bold;
+            word-break: break-all;
+            max-width: 90%;
+            transition: none;
+            animation: none;
+        }
+
+        #palm .bottom-controls .center-group {
+            gap: calc(14px * var(--ui-scale));
+        }
+
+        /* Equal-height palm controls, loaded after responsive.css */
+        #palm #swapBtn,
+        #palm .speed-control,
+        #palm .play-btn {
+            height: max(var(--tap-min), calc(47px * var(--ui-scale)));
+            min-height: var(--tap-min);
+        }
+        #palm #swapBtn {
+            background: var(--btn-bg);
+            border: none;
+            color: var(--btn-text);
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 calc(18px * var(--ui-scale));
+            border-radius: calc(50px * var(--ui-scale));
+            cursor: pointer;
+            touch-action: manipulation;
+            width: auto;
+            min-width: calc(60px * var(--ui-scale));
+            letter-spacing: calc(0.5px * var(--ui-scale));
+            line-height: 1.2;
+            box-shadow: var(--btn-shadow);
+            transition: var(--btn-transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+        #palm #swapBtn:hover {
+            background: #1565c0;
+        }
+        [data-theme="dark"] #palm #swapBtn:hover {
+            background: #1565c0;
+        }
+        #palm #swapBtn:focus-visible {
+            outline: calc(3px * var(--ui-scale)) solid #ffb300;
+            outline-offset: calc(2px * var(--ui-scale));
+        }
+        #palm .speed-control {
+            display: flex;
+            align-items: center;
+            gap: calc(6px * var(--ui-scale));
+            background: var(--nback-brown);
+            padding: 0 calc(10px * var(--ui-scale));
+            border-radius: calc(30px * var(--ui-scale));
+            border: none;
+            transition: background 0.3s, border 0.3s;
+        }
+        #palm .speed-btn {
+            width: calc(28px * var(--ui-scale));
+            height: calc(28px * var(--ui-scale));
+            min-width: var(--tap-min);
+            min-height: var(--tap-min);
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+            margin-top: calc(2px * var(--ui-scale));
+            box-shadow: none;
+            transition: transform 0.15s, color 0.3s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #palm .speed-btn svg {
+            width: calc(22px * var(--ui-scale));
+            height: calc(22px * var(--ui-scale));
+            display: block;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 3.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        #palm .speed-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+        #palm .speed-btn:active {
+            transform: scale(0.8);
+        }
+        #palm .speed-btn:focus-visible {
+            outline: calc(3px * var(--ui-scale)) solid #ffb300;
+            outline-offset: calc(2px * var(--ui-scale));
+        }
+        #palm .speed-display {
+            min-width: calc(32px * var(--ui-scale));
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+        #palm .play-btn {
+            width: max(var(--tap-min), calc(47px * var(--ui-scale)));
+            min-width: var(--tap-min);
+            border-radius: 50%;
+            background: var(--nback-brown);
+        }
+        #palm .play-btn:hover {
+            background: #6D4C41;
+        }
+        [data-theme="dark"] #palm .speed-control {
+            background: var(--btn-bg);
+        }
+        [data-theme="dark"] #palm .speed-btn {
+            color: #fff;
+            background: transparent;
+        }
+        [data-theme="dark"] #palm .speed-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+        [data-theme="dark"] #palm .play-btn {
+            background: var(--btn-bg);
+        }
+        [data-theme="dark"] #palm .play-btn:hover {
+            background: #1565c0;
+        }
+
+        /* Physical button press: depth plus scale while held. */
+        button.pressed:not(:disabled):not(.disabled),
+        [role="button"].pressed:not(.disabled),
+        .category-btn.pressed:not(.disabled):not(.completed),
+        .menu-item.pressed:not(.disabled),
+        .food-card.pressed:not(.disabled),
+        .different-card.pressed:not(.disabled),
+        .shopping-list-card.pressed:not(.disabled),
+        .reality-dot.pressed:not(.disabled),
+        #palm .game-board.pressed,
+        #palm .side.pressed {
+            transform: translateY(calc(4px * var(--ui-scale))) scale(0.96) !important;
+            box-shadow: 0 calc(1px * var(--ui-scale)) 0 rgba(0, 0, 0, 0.18) !important;
+        }
+
+        /* Palm gesture cards stay still while pressed. */
+        #palm .game-board.pressed,
+        #palm .side.pressed {
+            transform: none !important;
+            box-shadow: var(--panel-shadow) !important;
+        }
+
+        /* Shared right/wrong feedback lighting.
+           卡片類別請加入下方清單，確保共用燈光不會被各遊戲卡片的基礎樣式（更高 specificity）蓋過。 */
+        .feedback-correct,
+        .food-card.feedback-correct,
+        .different-grid-container .different-card.feedback-correct,
+        .shopping-list-card.feedback-correct,
+        .shopping-order-card.feedback-correct,
+        .shopping-recall-card.feedback-correct {
+            border-color: var(--feedback-correct-border);
+            background: var(--feedback-correct-bg);
+            box-shadow: var(--feedback-correct-glow);
+        }
+        .feedback-wrong,
+        .food-card.feedback-wrong,
+        .different-grid-container .different-card.feedback-wrong,
+        .shopping-list-card.feedback-wrong,
+        .shopping-order-card.feedback-wrong,
+        .shopping-recall-card.feedback-wrong {
+            border-color: var(--feedback-wrong-border);
+            background: var(--feedback-wrong-bg);
+            box-shadow: var(--feedback-wrong-glow);
+        }
+        .feedback-pill.correct {
+            color: var(--feedback-correct-text);
+        }
+        .feedback-pill.wrong {
+            color: var(--feedback-wrong-text);
+        }
+        .feedback-pill.warn {
+            color: var(--feedback-warn-text);
+        }
+
+        /* Startup preload screen shown only while the first cache is being built
+           or while an update is being installed. */
+        .boot-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--container-bg);
+        }
+        .boot-loader.hidden {
+            display: none;
+        }
+        .boot-loader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: calc(34px * var(--ui-scale));
+            padding: calc(28px * var(--ui-scale));
+        }
+        .boot-loader-brain {
+            width: calc(132px * var(--ui-scale));
+            height: calc(132px * var(--ui-scale));
+            display: block;
+            user-select: none;
+            pointer-events: none;
+            animation: boot-brain-pulse 3.5s ease-in-out infinite;
+            transform-origin: 50% 55%;
+        }
+        .boot-loader-track {
+            width: 50vw;
+            max-width: none;
+            height: calc(22px * var(--ui-scale));
+            border-radius: calc(30px * var(--ui-scale));
+            background: var(--control-bg);
+            border: calc(2px * var(--ui-scale)) solid var(--border-color);
+            overflow: hidden;
+            padding: calc(2px * var(--ui-scale));
+        }
+        .boot-loader-progress {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: #00c800;
+            transition: width 0.16s linear;
+        }
+        [data-theme="dark"] .boot-loader-progress {
+            background: var(--highlight-correct);
+        }
+        @keyframes boot-brain-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+        }
+
+        /* ================================================================
+           Portrait lock
+           ================================================================ */
+        .portrait-lock {
+            position: fixed;
+            inset: 0;
+            z-index: 11000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: calc(28px * var(--ui-scale));
+            background: var(--container-bg);
+            color: var(--text-color);
+            text-align: center;
+            overflow: hidden;
+        }
+        .portrait-lock.active {
+            display: flex;
+        }
+        .portrait-lock-content {
+            width: 100%;
+            max-width: calc(720px * var(--ui-scale));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: calc(22px * var(--ui-scale));
+            min-width: 0;
+        }
+        .portrait-lock-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.35em;
+            height: 1.35em;
+            font-size: min(calc(96px * var(--ui-scale)), 22vw);
+            line-height: 1;
+            transform-origin: 50% 50%;
+            animation: portraitLockTurn 2.4s linear infinite;
+        }
+        .portrait-lock-title {
+            font-size: min(calc(56px * var(--ui-scale)), 10vw);
+            font-weight: 800;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        .portrait-lock-sub {
+            font-size: min(calc(30px * var(--ui-scale)), 6vw);
+            color: var(--muted-text);
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        @keyframes portraitLockTurn {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================================================================
+           Small-screen text overflow protection
+           Shrink first; wrap only when the text still cannot fit.
+           ================================================================ */
+        html,
+        body {
+            overflow-x: hidden;
+        }
+        .app-screen {
+            max-width: 100vw;
+        }
+
+        /* App-like screen transitions.
+           Both screens are shown as fixed layers while the router animates
+           between them, so the hidden class cannot collapse the old screen. */
+        body.cognitive-screen-transition .app-screen.screen-from,
+        body.cognitive-screen-transition .app-screen.screen-to {
+            position: fixed !important;
+            inset: 0 !important;
+            display: flex !important;
+            pointer-events: none !important;
+            z-index: 1001 !important;
+            will-change: opacity;
+        }
+        body.cognitive-screen-transition .app-screen.screen-to {
+            z-index: 1002 !important;
+        }
+        body.screen-forward .app-screen.screen-from,
+        body.screen-back .app-screen.screen-from,
+        body.screen-home .app-screen.screen-from {
+            animation: screen-fade-out 200ms ease-out forwards;
+        }
+        body.screen-forward .app-screen.screen-to,
+        body.screen-back .app-screen.screen-to,
+        body.screen-home .app-screen.screen-to {
+            animation: screen-fade-in 200ms ease-out forwards;
+        }
+        @keyframes screen-fade-out {
+            to { opacity: 0; }
+        }
+        @keyframes screen-fade-in {
+            from { opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            body.cognitive-screen-transition .app-screen.screen-from,
+            body.cognitive-screen-transition .app-screen.screen-to {
+                animation: screen-fade-in 140ms ease-out forwards;
+            }
+            body.cognitive-screen-transition .app-screen.screen-from {
+                animation-name: screen-fade-out;
+            }
+        }
+
+        .menu-overlay {
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            width: 100%;
+            min-width: 0;
+            position: relative;
+        }
+        .top-bar:not(.wrapped) .question-area {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: auto;
+            flex: none;
+            min-width: 0;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .top-bar:not(.wrapped) .question-text,
+        .top-bar:not(.wrapped) .gng-rules-text {
+            transform: none;
+            pointer-events: auto;
+        }
+        .top-bar .left-group,
+        .top-bar .right-group {
+            position: relative;
+            z-index: 2;
+        }
+        .top-bar .left-group,
+        .top-bar .right-group,
+        .top-bar .question-area {
+            min-width: 0;
+        }
+        .top-bar .left-group,
+        .top-bar .right-group {
+            flex-shrink: 1;
+            max-width: 100%;
+        }
+        .top-bar .question-area {
+            max-width: 100%;
+        }
+        .question-text,
+        .gng-rules-text {
+            min-width: 0;
+            max-width: 100%;
+            overflow-wrap: anywhere;
+        }
+
+        .category-btn,
+        .food-card,
+        .shopping-list-card,
+        .shopping-recall-card,
+        .different-card,
+        .gng-card,
+        .nback-image-container {
+            min-width: 0;
+        }
+        .category-btn .label,
+        .food-card .food-name,
+        .shopping-list-card .food-name,
+        .shopping-recall-card .food-name,
+        .different-card .food-name,
+        .gng-card .food-name {
+            min-width: 0;
+            max-width: 100%;
+            overflow-wrap: anywhere;
+        }
+
+        .message-box {
+            width: min(88vw, calc(760px * var(--ui-scale)));
+            min-width: 0;
+            max-width: 92vw;
+            padding-right: calc(24px * var(--ui-scale));
+            padding-left: calc(24px * var(--ui-scale));
+            overflow: hidden;
+        }
+        .message-box .msg-text,
+        .message-box .msg-sub {
+            max-width: 100%;
+            overflow-wrap: anywhere;
+        }
+
+        .slide-menu {
+            max-width: 88vw;
+        }
+        .slide-menu .menu-item {
+            min-width: 0;
+        }
+        .slide-menu .menu-item .state-badge {
+            flex-shrink: 0;
+        }
+
+        .settings-screen .settings-options > div {
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+        #shoppingSettings #shoppingMemoryTimeLabel {
+            flex-wrap: wrap;
+            max-width: 100%;
+            overflow: visible;
+        }
+
+        .reality-info,
+        .reality-duo,
+        .reality-time-page,
+        .reality-location-block {
+            min-width: 0;
+            max-width: 100%;
+        }
+        .reality-value,
+        .reality-label {
+            max-width: 100%;
+            overflow-wrap: anywhere;
+        }
+
+        .grid-container,
+        .shopping-list-grid,
+        .shopping-recall-grid,
+        .different-grid-container {
+            min-width: 0;
+            max-width: 100%;
+        }
+
+        @media (max-width: 640px) {
+            .shopping-list-card.name-only .food-name,
+            .shopping-order-card.name-only .food-name {
+                font-size: clamp(calc(30px * var(--ui-scale)), 8vw, calc(76px * var(--ui-scale)));
+            }
+            .food-card .food-name,
+            .shopping-list-card .food-name,
+            .shopping-recall-card .food-name,
+            .different-card .food-name {
+                font-size: clamp(calc(14px * var(--ui-scale)), 4vw, calc(38px * var(--ui-scale)));
+            }
+            .top-bar .right-group {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                row-gap: calc(4px * var(--ui-scale));
+            }
+            .top-bar .right-group > * {
+                flex-shrink: 1;
+                min-width: 0;
+            }
+            .dropdown-wrapper {
+                max-width: 100%;
+            }
+            .dropdown-wrapper select {
+                max-width: calc(90px * var(--ui-scale));
+            }
+            #palm .dropdown-wrapper label {
+                display: none;
+            }
+            .shopping-memory-time-suffix.active {
+                max-width: 5em;
+            }
+        }
+
+        /* ================================================================
+           Short landscape phones (iPhone included)
+           Keep titles/buttons fixed and let only the content area scroll.
+           ================================================================ */
+        /* Shared settings screen layout: centered when it fits, scroll when it does not. */
+        .settings-screen {
+            --settings-screen-pad-y: var(--screen-pad-y);
+            --settings-screen-pad-bottom: var(--screen-pad-y);
+            --settings-header-gap: var(--screen-gap-sm);
+            --settings-subtitle-gap: var(--screen-gap-md);
+            --settings-options-gap: calc(18px * var(--ui-scale));
+            --settings-actions-gap: var(--settings-options-gap);
+            --settings-options-pad-y: calc(10px * var(--ui-scale));
+            --settings-options-max-width: min(calc(var(--avail-w) - calc(48px * var(--ui-scale))), calc(620px * var(--ui-scale)));
+        }
+        .settings-screen--centered {
+            justify-content: center;
+        }
+        .settings-screen--centered .settings-options {
+            flex: 0 1 auto;
+            overflow: visible;
+        }
+        .settings-screen--centered .settings-actions {
+            position: static;
+        }
+        .settings-screen .settings-options {
+            gap: var(--settings-options-gap);
+            max-width: var(--settings-options-max-width);
+        }
+        .settings-screen .settings-actions {
+            width: 100%;
+            max-width: var(--settings-options-max-width);
+            margin-top: calc(var(--settings-actions-gap) - var(--settings-options-pad-y));
+        }
+        .settings-screen .settings-actions > button {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+        }
+
+        .settings-screen.settings-screen--measure {
+            justify-content: flex-start;
+            overflow: visible;
+        }
+        .settings-screen.settings-screen--measure .settings-options {
+            flex: 0 0 auto;
+            overflow: visible;
+        }
+        .settings-screen.settings-screen--measure .settings-actions {
+            position: static;
+        }
+        .settings-screen--scroll {
+            justify-content: flex-start;
+            overflow: hidden;
+            padding-top: var(--settings-screen-pad-y);
+            padding-bottom: var(--settings-screen-pad-bottom);
+        }
+        .settings-screen--scroll .menu-header {
+            margin-top: 0 !important;
+            margin-bottom: var(--settings-header-gap);
+        }
+        .settings-screen--scroll .menu-subtitle {
+            margin-top: 0;
+            margin-bottom: var(--settings-subtitle-gap);
+        }
+        .settings-screen--scroll .settings-options {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            margin-bottom: 0;
+            padding-top: var(--settings-options-pad-y);
+            padding-bottom: var(--settings-options-pad-y);
+        }
+        .settings-screen--scroll .settings-actions {
+            position: static;
+            margin-top: calc(var(--settings-actions-gap) - var(--settings-options-pad-y));
+            margin-bottom: 0;
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            #home,
+            #mainMenu,
+            #foodCategorySelect,
+            #nbackModeSelect {
+                overflow: visible;
+            }
+            #home .menu-header,
+            #mainMenu .menu-header,
+            #foodCategorySelect .menu-header,
+            #nbackModeSelect .menu-header,
+            #home .menu-subtitle,
+            #mainMenu .menu-subtitle,
+            #foodCategorySelect .menu-subtitle,
+            #nbackModeSelect .menu-subtitle {
+                flex-shrink: 0;
+            }
+            #home .menu-footer,
+            #mainMenu .menu-footer,
+            #nbackModeSelect .menu-footer {
+                display: none;
+            }
+
+            /* Phone landscape: reuse the shared menu grid formula with a
+               viewport-derived chrome allowance instead of a fixed card size. */
+            .category-grid.menu-grid,
+            .home-grid.menu-grid {
+                --menu-chrome-h: clamp(100px, 28vh, 300px);
+            }
+
+            .settings-screen .menu-header,
+            .settings-screen .menu-subtitle {
+                flex-shrink: 0;
+            }
+
+            .save-btn {
+                min-width: 62px;
+                padding: 0 calc(20px * var(--ui-scale));
+                font-size: calc(24px * var(--ui-scale));
+            }
+
+            .question-text,
+            .gng-rules-text,
+            .top-bar.wrapped .question-text,
+            .top-bar.wrapped .gng-rules-text {
+                white-space: nowrap !important;
+                overflow: visible;
+                text-overflow: clip;
+            }
+
+            .top-bar .question-area {
+                min-width: 0;
+            }
+
+            .back-btn,
+            .hamburger-btn,
+            .action-btn,
+            .score-display,
+            .dropdown-wrapper,
+            .save-btn,
+            .reality-edit-btn,
+            .magnify-btn,
+            .play-btn,
+            .speed-btn {
+                min-width: var(--tap-min);
+                min-height: var(--tap-min);
+            }
+            .back-btn,
+            .hamburger-btn {
+                width: var(--tap-min);
+                height: var(--tap-min);
+            }
+            .magnify-btn {
+                width: 38px;
+                height: 38px;
+            }
+
+            :root {
+                --top-bar-h: 38px;
+                --control-h: 32px;
+                --safe-cap-left: 10px;
+                --safe-cap-right: 10px;
+                --safe-cap-bottom: 0px;  /* 手機橫屏：安全區域上限（裝置回報值超過即截斷） */
+                --stage-avail-w: calc(var(--avail-w) - calc(8px * var(--ui-scale)));
+            }
+            .back-btn,
+            .hamburger-btn {
+                width: 38px;
+                height: 38px;
+                min-width: 38px;
+                min-height: 38px;
+            }
+            .action-btn,
+            .score-display,
+            .dropdown-wrapper,
+            .save-btn,
+            .reality-edit-btn {
+                min-width: 38px;
+                min-height: 38px;
+                height: 38px;
+            }
+            .magnify-btn,
+            .play-btn,
+            .speed-btn {
+                min-width: 34px;
+                min-height: 34px;
+                height: 34px;
+            }
+            .action-btn,
+            .score-display,
+            .dropdown-wrapper,
+            .save-btn {
+                width: auto;
+            }
+            .action-btn {
+                min-width: 56px;
+                padding: 0 calc(20px * var(--ui-scale));
+                font-size: calc(24px * var(--ui-scale));
+            }
+            .reality-edit-btn {
+                width: var(--chrome-size);
+                height: var(--chrome-size);
+                min-width: var(--chrome-size);
+                min-height: var(--chrome-size);
+                padding: 0;
+            }
+            .score-display {
+                min-width: 58px;
+                padding: 0 calc(24px * var(--ui-scale));
+                font-size: calc(24px * var(--ui-scale));
+            }
+            .score-display span {
+                font-size: calc(26px * var(--ui-scale));
+            }
+            .dropdown-wrapper {
+                min-width: 80px;
+                padding: 0 calc(16px * var(--ui-scale));
+            }
+            .dropdown-wrapper label,
+            .dropdown-wrapper select {
+                font-size: calc(22px * var(--ui-scale));
+            }
+            .nback-n-select {
+                height: 38px;
+                min-height: 38px;
+            }
+            .speed-control {
+                height: 34px;
+            }
+            .play-btn,
+            .speed-btn {
+                width: 34px;
+                height: 34px;
+            }
+            .bottom-controls {
+                border-top: none;
+                min-height: 0;
+                margin-top: 0;
+                padding-top: calc(2px * var(--ui-scale));
+                padding-bottom: calc(2px * var(--ui-scale));
+                background: transparent;
+            }
+            #palm .speed-control,
+            #palm .play-btn,
+            #palm #swapBtn {
+                height: 34px;
+                min-height: 34px;
+            }
+            #palm .play-btn {
+                width: 34px;
+                min-width: 34px;
+            }
+            #palm .speed-btn {
+                width: 34px;
+                height: 34px;
+                min-width: 34px;
+                min-height: 34px;
+            }
+            #home .home-grid,
+            #mainMenu .category-grid,
+            #foodCategorySelect .category-grid,
+            #nbackModeSelect .category-grid {
+                flex: 0 0 auto;
+                margin: 0 auto;
+            }
+            #home,
+            #mainMenu,
+            #foodCategorySelect,
+            #nbackModeSelect {
+                justify-content: center;
+            }
+            #home,
+            #mainMenu,
+            #foodCategorySelect,
+            #nbackModeSelect {
+                padding-bottom: 0;
+            }
+            .settings-screen {
+                --settings-screen-pad-y: clamp(20px, 7vh, 28px);
+                --settings-screen-pad-bottom: clamp(16px, 6vh, 24px);
+            }
+            .slide-menu {
+                width: min(225px, 61.5vw);
+            }
+            .slide-menu .menu-item {
+                white-space: nowrap;
+                font-size: max(calc(24px * var(--ui-scale)), 18px);
+            }
+            .menu-title {
+                font-size: max(calc(48px * var(--ui-scale)), 29px);
+            }
+            #home .menu-title,
+            #mainMenu .menu-title,
+            #foodCategorySelect .menu-title,
+            #nbackModeSelect .menu-title {
+                font-size: max(calc(56px * var(--ui-scale)), 35px);
+            }
+            .menu-subtitle {
+                font-size: max(calc(24px * var(--ui-scale)), 15px);
+            }
+            #home .menu-subtitle,
+            #mainMenu .menu-subtitle,
+            #foodCategorySelect .menu-subtitle,
+            #nbackModeSelect .menu-subtitle {
+                font-size: max(calc(28px * var(--ui-scale)), 18px);
+            }
+            .question-text {
+                font-size: max(calc(36px * var(--ui-scale)), 20px);
+            }
+            .gng-rules-text {
+                font-size: max(calc(32px * var(--ui-scale)), 18px);
+            }
+            #home .home-grid .category-btn .label,
+            .app-screen#mainMenu .category-grid.game-select .category-btn .label,
+            #foodCategorySelect .category-grid.food-select .category-btn .label,
+            .app-screen#nbackModeSelect .category-grid.nback-mode-grid .category-btn .label {
+                font-size: max(calc(30px * var(--ui-scale)), 18px);
+            }
+            .settings-screen > div:not(.menu-header):not(.menu-subtitle):not(.chrome-btn-left):not(.chrome-btn-right) span {
+                font-size: max(calc(26px * var(--ui-scale)), 17px) !important;
+            }
+            .settings-screen select,
+            #gngAutoToggle {
+                font-size: max(calc(24px * var(--ui-scale)), 16px) !important;
+            }
+        }
+
+        /* Shared game-stage vertical padding so every image stage starts and ends the same way. */
+        #foodGame .grid-wrapper,
+        #differentGame .different-grid-wrapper,
+        #gngGame .gng-grid-wrapper,
+        #nbackGame .nback-grid-wrapper,
+        #dualNbackGame .dual-stage,
+        #shoppingGame .shopping-stage {
+            padding: calc(2px * var(--ui-scale)) 0;
+        }

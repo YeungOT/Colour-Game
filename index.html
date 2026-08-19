@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>顏色四肢反應遊戲</title>
+    <meta name="theme-color" content="#f5f0e8" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="顏色遊戲" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" sizes="180x180" />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/unified.css" />
+    <link rel="stylesheet" href="css/controls.css" />
+    <link rel="stylesheet" href="css/color.css" />
+    <script src="js/settings.js"></script>
+    <script>try{document.documentElement.setAttribute('data-theme',CognitiveSettingsStore.load(CognitiveSettingsStore.keys.theme).theme==='dark'?'dark':'light');}catch(e){}</script>
+</head>
+<body>
+
+    <!-- 主選單 -->
+    <div class="menu-overlay app-screen menu-overlay--center" id="mainMenu">
+        <div class="chrome-btn-right">
+            <button class="hamburger-btn" id="hamburgerBtnHome" title="開啟選單"><img class="menu-icon" src="assets/icons/menu.png" alt="menu" /></button>
+        </div>
+        <div class="menu-header">
+            <div class="menu-title"><span class="brain">🎨</span> 顏色四肢反應遊戲</div>
+        </div>
+        <div class="menu-subtitle">選擇模式開始</div>
+        <div class="category-grid color-mode-grid">
+            <button class="category-btn" id="gameBasicBtn">
+                <span class="icon">🎯</span>
+                <span class="label">基本配對</span>
+            </button>
+            <button class="category-btn" id="gameSeqBtn">
+                <span class="icon">🔢</span>
+                <span class="label">順序記憶</span>
+            </button>
+            <button class="category-btn" id="gameStroopBtn">
+                <span class="icon">🧠</span>
+                <span class="label">斯特魯普</span>
+            </button>
+        </div>
+        <div class="menu-footer"></div>
+    </div>
+
+    <!-- 基本配對設定 -->
+    <div class="menu-overlay app-screen settings-screen" id="basicSettings">
+        <div class="chrome-btn-left">
+            <button class="back-btn" id="basicSettingsBackBtn" title="返回上一頁"><img class="back-icon" src="assets/icons/back.png" alt="back" /></button>
+        </div>
+        <div class="chrome-btn-right">
+            <button class="hamburger-btn" id="hamburgerBtnBasicSettings" title="開啟選單"><img class="menu-icon" src="assets/icons/menu.png" alt="menu" /></button>
+        </div>
+        <div class="menu-header">
+            <div class="menu-title">🎯 基本配對設定</div>
+        </div>
+        <div class="menu-subtitle">設定顯示方式與顏色數目</div>
+        <div class="settings-options">
+            <div class="setting-row">
+                <span class="setting-label">模式</span>
+                <select id="basicModeSelect" class="setting-select">
+                    <option value="standard">標準</option>
+                    <option value="exclusion">排除</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label" id="basicCountLabel">顏色數目</span>
+                <select id="basicCountSelect" class="setting-select"></select>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label">圖形標記</span>
+                <button id="basicShapesToggle" class="setting-toggle">關閉</button>
+            </div>
+        </div>
+        <div class="settings-actions">
+            <button id="basicStartBtn" class="primary-btn">▶ 開始遊戲</button>
+        </div>
+    </div>
+
+    <!-- 順序記憶設定 -->
+    <div class="menu-overlay app-screen settings-screen" id="seqSettings">
+        <div class="chrome-btn-left">
+            <button class="back-btn" id="seqSettingsBackBtn" title="返回上一頁"><img class="back-icon" src="assets/icons/back.png" alt="back" /></button>
+        </div>
+        <div class="chrome-btn-right">
+            <button class="hamburger-btn" id="hamburgerBtnSeqSettings" title="開啟選單"><img class="menu-icon" src="assets/icons/menu.png" alt="menu" /></button>
+        </div>
+        <div class="menu-header">
+            <div class="menu-title">🔢 順序記憶設定</div>
+        </div>
+        <div class="menu-subtitle">設定序列長度與顯示方式</div>
+        <div class="settings-options">
+            <div class="setting-row">
+                <span class="setting-label">序列長度</span>
+                <select id="seqLengthSelect" class="setting-select">
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label">次序</span>
+                <select id="seqDirectionSelect" class="setting-select">
+                    <option value="forward">順序</option>
+                    <option value="reverse">倒序</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label">顯示方式</span>
+                <select id="seqDisplaySelect" class="setting-select">
+                    <option value="one">逐張顯示</option>
+                    <option value="all">全部顯示</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label">圖形標記</span>
+                <button id="seqShapesToggle" class="setting-toggle">關閉</button>
+            </div>
+        </div>
+        <div class="settings-actions">
+            <button id="seqStartBtn" class="primary-btn">▶ 開始遊戲</button>
+        </div>
+    </div>
+
+    <!-- 斯特魯普設定 -->
+    <div class="menu-overlay app-screen settings-screen" id="stroopSettings">
+        <div class="chrome-btn-left">
+            <button class="back-btn" id="stroopSettingsBackBtn" title="返回上一頁"><img class="back-icon" src="assets/icons/back.png" alt="back" /></button>
+        </div>
+        <div class="chrome-btn-right">
+            <button class="hamburger-btn" id="hamburgerBtnStroopSettings" title="開啟選單"><img class="menu-icon" src="assets/icons/menu.png" alt="menu" /></button>
+        </div>
+        <div class="menu-header">
+            <div class="menu-title">🧠 斯特魯普設定</div>
+        </div>
+        <div class="menu-subtitle">設定作答規則與圖形標記</div>
+        <div class="settings-options">
+            <div class="setting-row">
+                <span class="setting-label">作答規則</span>
+                <select id="stroopRuleSelect" class="setting-select">
+                    <option value="color">跟顏色</option>
+                    <option value="word">跟字義</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label">圖形標記</span>
+                <button id="stroopShapesToggle" class="setting-toggle">關閉</button>
+            </div>
+        </div>
+        <div class="settings-actions">
+            <button id="stroopStartBtn" class="primary-btn">▶ 開始遊戲</button>
+        </div>
+    </div>
+
+    <!-- 基本配對遊戲 -->
+    <div class="game-container app-screen" id="basicGame" style="display:none;">
+        <div class="top-bar">
+            <div class="left-group">
+                <button class="back-btn" id="basicBackBtn" title="返回上一頁"><img class="back-icon" src="assets/icons/back.png" alt="back" /></button>
+            </div>
+            <div class="question-area">
+                <span class="question-text" id="basicQuestionText">基本配對</span>
+            </div>
+            <div class="right-group">
+                <button class="hamburger-btn" id="hamburgerBtnBasic" title="開啟選單"><img class="menu-icon" src="assets/icons/menu.png" alt="menu" /></button>
+            </div>
+        </div>
+
+        <div class="color-stage" id="basicStage">
+            <div class="color-phase-label hidden" id="basicPhaseLabel"></div>
+            <div class="color-grid" id="basicGrid"></div>
+        </div>
+
+        <div class="bottom-controls">
+            <div class="left-group"></div>
+            <div class="center-group color-controls">
+                <button class="play-btn" id="basicPlayBtn">
+                    <span class="play-icon">
+                        <span class="triangle"></span>
+                        <span class="pause-bar left"></span>
+                        <span class="pause-bar right"></span>
+                    </span>
+                </button>
+                <div class="speed-control">
+                    <button class="speed-btn" id="basicSpeedDown">◀</button>
+                    <span class="speed-display" id="basicSpeedDisplay">5</span>
+                    <button class="speed-btn" id="basicSpeedUp">▶</button>
+                </div>
+            </div>
+            <div class="right-group"></div>
+        </div>
+    </div>
+
+    <!-- 順序記憶遊戲 -->
+    <div class="game-container app-screen" id="seqGame" style="display:none;">
+        <div class="top-bar">
+            <div class="left-group">
+                <button class="back-btn" id="seqBackBtn" title="返回上一頁"><img class="back-icon" src="assets/icons/back.png" alt="back" /></button>
+            </div>
+            <div class="question-area">
+                <span class="question-text" id="seqQuestionText">順序記憶</span>
+            </div>
+            <div class="right-group">
+                <button class="hamburger-btn" id="hamburgerBtnSeq" title="開啟選單"><img class="menu-icon" src="assets/icons/menu.png" alt="menu" /></button>
+            </div>
+        </div>
+
+        <div class="color-stage" id="seqStage">
+            <div class="color-grid" id="seqGrid"></div>
+            <div class="answer-screen hidden" id="seqAnswerScreen">開始作答</div>
+        </div>
+
+        <div class="bottom-controls">
+            <div class="left-group"></div>
+            <div class="center-group color-controls">
+                <button class="play-btn" id="seqPlayBtn">
+                    <span class="play-icon">
+                        <span class="triangle"></span>
+                        <span class="pause-bar left"></span>
+                        <span class="pause-bar right"></span>
+                    </span>
+                </button>
+                <div class="speed-control">
+                    <button class="speed-btn" id="seqSpeedDown">◀</button>
+                    <span class="speed-display" id="seqSpeedDisplay">5</span>
+                    <button class="speed-btn" id="seqSpeedUp">▶</button>
+                </div>
+                <button class="color-replay-btn" id="seqReplayBtn">重播</button>
+            </div>
+            <div class="right-group"></div>
+        </div>
+    </div>
+
+    <!-- 斯特魯普遊戲 -->
+    <div class="game-container app-screen" id="stroopGame" style="display:none;">
+        <div class="top-bar">
+            <div class="left-group">
+                <button class="back-btn" id="stroopBackBtn" title="返回上一頁"><img class="back-icon" src="assets/icons/back.png" alt="back" /></button>
+            </div>
+            <div class="question-area">
+                <span class="question-text" id="stroopQuestionText">跟顏色</span>
+            </div>
+            <div class="right-group">
+                <button class="hamburger-btn" id="hamburgerBtnStroop" title="開啟選單"><img class="menu-icon" src="assets/icons/menu.png" alt="menu" /></button>
+            </div>
+        </div>
+
+        <div class="color-stage" id="stroopStage">
+            <div class="color-phase-label hidden" id="stroopPhaseLabel"></div>
+            <div class="stroop-card" id="stroopCard">
+                <div class="stroop-shape hidden" id="stroopShape"></div>
+                <div class="stroop-word" id="stroopWord">紅色</div>
+            </div>
+        </div>
+
+        <div class="bottom-controls">
+            <div class="left-group"></div>
+            <div class="center-group color-controls">
+                <button class="play-btn" id="stroopPlayBtn">
+                    <span class="play-icon">
+                        <span class="triangle"></span>
+                        <span class="pause-bar left"></span>
+                        <span class="pause-bar right"></span>
+                    </span>
+                </button>
+                <div class="speed-control">
+                    <button class="speed-btn" id="stroopSpeedDown">◀</button>
+                    <span class="speed-display" id="stroopSpeedDisplay">5</span>
+                    <button class="speed-btn" id="stroopSpeedUp">▶</button>
+                </div>
+            </div>
+            <div class="right-group"></div>
+        </div>
+    </div>
+
+    <!-- 側滑選單 -->
+    <div class="slide-menu" id="slideMenu">
+        <div class="menu-item" id="slideThemeBtn">
+            🌑 深色模式
+            <span class="state-badge" id="themeBadge">○</span>
+        </div>
+        <div class="menu-item" id="slideBgMusicBtn">
+            🔊 背景音樂
+            <span class="state-badge" id="bgMusicBadge">●</span>
+        </div>
+        <div class="menu-item" id="slideSfxBtn">
+            🔊 音效
+            <span class="state-badge" id="sfxBadge">●</span>
+        </div>
+        <div class="menu-divider"></div>
+        <div class="menu-item" id="slideHomeBtn">🏠 主選單</div>
+    </div>
+
+    <div class="slide-menu-backdrop" id="slideMenuBackdrop"></div>
+
+    <div class="portrait-lock" id="portraitLock" aria-hidden="true">
+        <div class="portrait-lock-content">
+            <div class="portrait-lock-icon" aria-hidden="true">⟲</div>
+            <div class="portrait-lock-title">請將裝置橫放</div>
+            <div class="portrait-lock-sub">轉為橫向後繼續</div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/settings-layout.js"></script>
+    <script src="js/color.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/sw-register.js"></script>
+</body>
+</html>

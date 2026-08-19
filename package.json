@@ -1,0 +1,10 @@
+{
+  "name": "colour-game",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "node tools/serve.js",
+    "build:sw": "node tools/generate-service-worker.js",
+    "test": "node --test"
+  }
+}

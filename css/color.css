@@ -1,0 +1,376 @@
+        /* ================================================================
+           顏色四肢反應遊戲專用樣式
+           所有尺寸使用 --ui-scale 統一縮放，與 cognitive-training-pwa 一致。
+           ================================================================ */
+
+        /* 主選單：三種模式 */
+        .color-mode-grid {
+            grid-template-columns: repeat(3, 1fr);
+            max-width: calc(860px * var(--ui-scale));
+            gap: calc(24px * var(--ui-scale));
+        }
+        .color-mode-grid .category-btn { min-height: calc(150px * var(--ui-scale)); }
+        .color-mode-grid .category-btn .icon { font-size: calc(52px * var(--ui-scale)); }
+        .color-mode-grid .category-btn .label { font-size: calc(26px * var(--ui-scale)); }
+
+        /* 設定頁 */
+        .settings-options {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: calc(12px * var(--ui-scale));
+        }
+        .setting-label {
+            font-size: calc(24px * var(--ui-scale));
+            font-weight: 700;
+            color: var(--text-color);
+            transition: color 0.4s;
+        }
+        .setting-select {
+            font-size: calc(20px * var(--ui-scale));
+            font-weight: 600;
+            padding: calc(8px * var(--ui-scale)) calc(18px * var(--ui-scale));
+            border-radius: calc(30px * var(--ui-scale));
+            border: calc(2px * var(--ui-scale)) solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            outline: none;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            max-height: calc(46px * var(--ui-scale));
+        }
+        [data-theme="dark"] .setting-select {
+            background: #1a1a2e;
+            border-color: #42a5f5;
+        }
+        .setting-toggle {
+            min-width: calc(100px * var(--ui-scale));
+            font-size: calc(20px * var(--ui-scale));
+            font-weight: 700;
+            padding: calc(8px * var(--ui-scale)) calc(20px * var(--ui-scale));
+            border-radius: calc(30px * var(--ui-scale));
+            border: calc(2px * var(--ui-scale)) solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+            transition: var(--btn-transition), background 0.3s, border-color 0.3s;
+        }
+        .setting-toggle.on {
+            background: var(--toggle-on-bg);
+            border-color: var(--highlight-correct);
+            color: var(--highlight-correct);
+        }
+        [data-theme="dark"] .setting-toggle.on {
+            border-color: #42a5f5;
+            color: #42a5f5;
+        }
+        .primary-btn {
+            width: 100%;
+            max-width: calc(640px * var(--ui-scale));
+            padding: calc(14px * var(--ui-scale));
+            font-size: calc(28px * var(--ui-scale));
+            font-weight: 700;
+            border: none;
+            border-radius: calc(40px * var(--ui-scale));
+            background: var(--highlight-correct);
+            color: #fff;
+            cursor: pointer;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: var(--btn-shadow-correct);
+            transition: var(--btn-transition);
+        }
+        .primary-btn:hover {
+            background: var(--btn-hover-correct);
+            transform: translateY(calc(-2px * var(--ui-scale)));
+        }
+        [data-theme="dark"] .primary-btn {
+            background: #0d47a1;
+            box-shadow: 0 calc(6px * var(--ui-scale)) 0 #0a2a6a;
+        }
+        [data-theme="dark"] .primary-btn:hover { background: #1565c0; }
+
+        /* 出題區 */
+        .color-stage {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: calc(10px * var(--ui-scale));
+            padding: calc(6px * var(--ui-scale)) calc(10px * var(--ui-scale)) calc(8px * var(--ui-scale));
+            overflow: hidden;
+            position: relative;
+        }
+        .color-phase-label {
+            flex-shrink: 0;
+            font-size: min(12vh, 12vw, calc(80px * var(--ui-scale)));
+            font-weight: 700;
+            color: var(--highlight-wrong);
+            background: var(--question-bg);
+            padding: calc(8px * var(--ui-scale)) calc(30px * var(--ui-scale));
+            border-radius: calc(40px * var(--ui-scale));
+            text-align: center;
+            line-height: 1.1;
+            box-shadow: inset 0 calc(2px * var(--ui-scale)) calc(8px * var(--ui-scale)) rgba(0, 0, 0, 0.04);
+            transition: background 0.4s, color 0.4s, box-shadow 0.4s;
+            max-width: 94vw;
+        }
+
+        /* 顏色格線：使用 shared.css 的共用 --grid-card 公式
+           （.color-grid 已加入 shared.css 共用容器清單） */
+        .color-grid {
+            --grid-name-track: calc(0px * var(--ui-scale));
+            --row-name-track: var(--grid-name-track);
+            --grid-card-max: calc(640px * var(--ui-scale));
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            cursor: pointer;
+            gap: calc(18px * var(--ui-scale));
+            grid-template-columns: repeat(var(--grid-cols), var(--card));
+            grid-auto-rows: var(--card);
+        }
+        .color-grid.count-1 {
+            --grid-cols: 1;
+            --grid-rows: 1;
+            --grid-gap-h: calc(0px * var(--ui-scale));
+            --grid-gap-v: calc(0px * var(--ui-scale));
+            --grid-card-max: calc(840px * var(--ui-scale));
+            --stage-inner-extra-h: calc(24px * var(--ui-scale));
+        }
+        .color-grid.count-2 {
+            --grid-cols: 2;
+            --grid-rows: 1;
+            --grid-gap-h: calc(28px * var(--ui-scale));
+            --grid-gap-v: calc(0px * var(--ui-scale));
+            --grid-card-max: calc(740px * var(--ui-scale));
+            --stage-inner-extra-h: calc(24px * var(--ui-scale));
+        }
+        .color-grid.count-3 {
+            --grid-cols: 3;
+            --grid-rows: 1;
+            --grid-gap-h: calc(36px * var(--ui-scale));
+            --grid-gap-v: calc(0px * var(--ui-scale));
+            --grid-card-max: calc(620px * var(--ui-scale));
+        }
+        .color-grid.count-4 {
+            --grid-cols: 4;
+            --grid-rows: 1;
+            --grid-gap-h: calc(40px * var(--ui-scale));
+            --grid-gap-v: calc(0px * var(--ui-scale));
+            --grid-card-max: calc(560px * var(--ui-scale));
+        }
+
+        .color-card {
+            border-radius: calc(28px * var(--ui-scale));
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: box-shadow 0.3s, transform 0.16s;
+        }
+        .color-card.excluded {
+            border: calc(6px * var(--ui-scale)) dashed rgba(255, 255, 255, 0.85);
+        }
+        .color-card-shape {
+            font-size: calc(var(--card) * 0.6);
+            line-height: 1;
+            color: #ffffff;
+            text-shadow: 0 calc(3px * var(--ui-scale)) calc(14px * var(--ui-scale)) rgba(0, 0, 0, 0.35);
+            pointer-events: none;
+            z-index: 5;
+        }
+        .color-card.dark-text .color-card-shape {
+            color: #ffffff;
+            text-shadow: 0 calc(3px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgba(0, 0, 0, 0.35);
+        }
+        .color-card-number {
+            z-index: 6;
+            font-weight: 800;
+            line-height: 1;
+            color: #ffffff;
+            text-shadow: 0 calc(3px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            user-select: none;
+        }
+        .color-card-number.center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: calc(var(--card) * 0.46);
+        }
+        .color-card-number.corner {
+            font-size: calc(var(--card) * 0.2);
+        }
+        .color-card-meta {
+            position: absolute;
+            top: calc(8px * var(--ui-scale));
+            left: calc(10px * var(--ui-scale));
+            z-index: 7;
+            display: flex;
+            align-items: center;
+            gap: calc(8px * var(--ui-scale));
+            pointer-events: none;
+            user-select: none;
+        }
+        .color-card-x {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5em;
+            height: 1.5em;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.92);
+            color: #d32f2f;
+            font-size: calc(var(--card) * 0.16);
+            line-height: 1;
+            box-shadow: 0 calc(3px * var(--ui-scale)) calc(10px * var(--ui-scale)) rgba(0, 0, 0, 0.2);
+        }
+
+        /* 順序記憶作答畫面 */
+        .answer-screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: var(--container-bg);
+            z-index: 5;
+            font-size: min(30vh, 26vw, calc(260px * var(--ui-scale)));
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            line-height: 1.05;
+            color: var(--highlight-correct);
+            text-align: center;
+            padding: calc(20px * var(--ui-scale));
+            transition: background 0.4s, color 0.4s;
+        }
+
+        /* 斯特魯普 */
+        .stroop-card {
+            width: min(94vw, calc(1320px * var(--ui-scale)));
+            height: min(78vh, calc(100vh - calc(150px * var(--ui-scale))), calc(720px * var(--ui-scale)));
+            cursor: pointer;
+            background: var(--card-bg);
+            border-radius: calc(48px * var(--ui-scale));
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(calc(12px * var(--ui-scale)), 3vw, calc(52px * var(--ui-scale)));
+            padding: clamp(calc(10px * var(--ui-scale)), 2.5vw, calc(32px * var(--ui-scale)));
+            overflow: hidden;
+            container-type: size;
+            container-name: stroop;
+            transition: background 0.4s, box-shadow 0.4s;
+        }
+        .stroop-shape {
+            font-size: min(60cqh, 38cqw, calc(480px * var(--ui-scale)));
+            line-height: 1;
+            color: var(--text-color);
+            text-shadow: 0 calc(3px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgba(0, 0, 0, 0.18);
+            flex-shrink: 0;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .stroop-word {
+            font-size: min(58cqh, 30cqw, calc(600px * var(--ui-scale)));
+            font-weight: 800;
+            line-height: 1.05;
+            text-align: center;
+            word-break: keep-all;
+            letter-spacing: 0;
+            text-shadow: 0 calc(5px * var(--ui-scale)) calc(22px * var(--ui-scale)) rgba(0, 0, 0, 0.12);
+            flex-shrink: 0;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        /* 底部控制區（共用部分見 css/controls.css） */
+        .color-controls {
+            display: flex;
+            align-items: center;
+            gap: calc(30px * var(--ui-scale));
+            justify-content: center;
+            --nav-size: calc(56px * var(--ui-scale));
+        }
+        .color-nav-btn {
+            width: var(--nav-size);
+            height: var(--nav-size);
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: var(--control-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--btn-transition);
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 calc(2px * var(--ui-scale)) calc(6px * var(--ui-scale)) rgba(0, 0, 0, 0.08);
+        }
+        .color-nav-btn:hover { background: var(--btn-hover); }
+        [data-theme="dark"] .color-nav-btn { background: #0d47a1; }
+        [data-theme="dark"] .color-nav-btn:hover { background: #1565c0; }
+        .color-nav-icon {
+            display: block;
+            width: calc(34px * var(--ui-scale));
+            height: calc(34px * var(--ui-scale));
+            object-fit: contain;
+            pointer-events: none;
+            user-select: none;
+        }
+        .color-nav-icon-flip { transform: scaleX(-1); }
+        [data-theme="dark"] .color-nav-icon {
+            filter: brightness(0) invert(1);
+        }
+        .color-replay-btn {
+            height: calc(var(--nav-size) - calc(5px * var(--ui-scale)));
+            padding: 0 calc(26px * var(--ui-scale));
+            border: none;
+            border-radius: calc(40px * var(--ui-scale));
+            background: var(--nback-brown);
+            color: #fff;
+            font-size: calc(22px * var(--ui-scale));
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--btn-transition);
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 calc(5px * var(--ui-scale)) 0 rgba(0, 0, 0, 0.18);
+        }
+        .color-replay-btn:hover {
+            background: #6D4C41;
+            transform: translateY(calc(-2px * var(--ui-scale)));
+        }
+        [data-theme="dark"] .color-replay-btn { background: #8D6E63; }
+        [data-theme="dark"] .color-replay-btn:hover { background: #A1887F; }
