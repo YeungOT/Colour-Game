@@ -64,6 +64,16 @@
             box-shadow: none;
             -webkit-tap-highlight-color: transparent;
         }
+        .speed-btn svg {
+            width: calc(22px * var(--ui-scale));
+            height: calc(22px * var(--ui-scale));
+            display: block;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 3.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
         .speed-btn:hover {
             background: rgba(255, 255, 255, 0.16);
         }

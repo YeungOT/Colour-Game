@@ -289,7 +289,8 @@
             justify-content: center;
             gap: clamp(calc(12px * var(--ui-scale)), 3vw, calc(52px * var(--ui-scale)));
             padding: clamp(calc(10px * var(--ui-scale)), 2.5vw, calc(32px * var(--ui-scale)));
-            overflow: hidden;
+            overflow: visible;
+            margin: calc(20px * var(--ui-scale)) 0;
             container-type: size;
             container-name: stroop;
             transition: background 0.4s, box-shadow 0.4s;
@@ -389,7 +390,7 @@
         }
         /* 啟動載入畫面：只顯示 🎨 emoji（無邊框），尺寸加大 */
         .boot-loader-emoji {
-            font-size: calc(200px * var(--ui-scale));
+            font-size: calc(132px * var(--ui-scale));
             line-height: 1;
             display: block;
             user-select: none;
