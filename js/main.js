@@ -88,6 +88,8 @@
             stopAllModes();
             transitionTo(document.getElementById(gameId), direction || 'screen-forward');
             initFn();
+            // 顯示遊戲後量度真實舞台高度，避免格線被頂部／底部列裁切（與 cognitive-training-pwa 相同機制）
+            setTimeout(function () { if (typeof syncStageHeights === 'function') syncStageHeights(); }, 220);
             syncTopBarCentering();
         }
 

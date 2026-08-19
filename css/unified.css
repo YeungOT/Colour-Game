@@ -954,6 +954,17 @@
                 width: 34px;
                 height: 34px;
             }
+            .color-nav-btn {
+                width: 34px;
+                height: 34px;
+                min-width: 34px;
+                min-height: 34px;
+            }
+            .color-replay-btn {
+                height: 34px;
+                min-height: 34px;
+                font-size: calc(16px * var(--ui-scale));
+            }
             .bottom-controls {
                 border-top: none;
                 min-height: 0;
@@ -1033,6 +1044,7 @@
                 font-size: max(calc(32px * var(--ui-scale)), 18px);
             }
             #home .home-grid .category-btn .label,
+            .app-screen#mainMenu .category-grid.menu-grid .category-btn .label,
             .app-screen#mainMenu .category-grid.game-select .category-btn .label,
             #foodCategorySelect .category-grid.food-select .category-btn .label,
             .app-screen#nbackModeSelect .category-grid.nback-mode-grid .category-btn .label {

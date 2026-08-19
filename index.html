@@ -14,8 +14,8 @@
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="css/variables.css" />
     <link rel="stylesheet" href="css/shared.css" />
-    <link rel="stylesheet" href="css/unified.css" />
     <link rel="stylesheet" href="css/controls.css" />
+    <link rel="stylesheet" href="css/unified.css" />
     <link rel="stylesheet" href="css/color.css" />
     <script src="js/settings.js"></script>
     <script>try{document.documentElement.setAttribute('data-theme',CognitiveSettingsStore.load(CognitiveSettingsStore.keys.theme).theme==='dark'?'dark':'light');}catch(e){}</script>
@@ -198,9 +198,13 @@
                     </span>
                 </button>
                 <div class="speed-control">
-                    <button class="speed-btn" id="basicSpeedDown">◀</button>
+                    <button class="speed-btn" id="basicSpeedDown" title="減慢速度" aria-label="減慢速度">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>
+                    </button>
                     <span class="speed-display" id="basicSpeedDisplay">5</span>
-                    <button class="speed-btn" id="basicSpeedUp">▶</button>
+                    <button class="speed-btn" id="basicSpeedUp" title="加快速度" aria-label="加快速度">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
                 </div>
             </div>
             <div class="right-group"></div>
@@ -237,9 +241,13 @@
                     </span>
                 </button>
                 <div class="speed-control">
-                    <button class="speed-btn" id="seqSpeedDown">◀</button>
+                    <button class="speed-btn" id="seqSpeedDown" title="減慢速度" aria-label="減慢速度">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>
+                    </button>
                     <span class="speed-display" id="seqSpeedDisplay">5</span>
-                    <button class="speed-btn" id="seqSpeedUp">▶</button>
+                    <button class="speed-btn" id="seqSpeedUp" title="加快速度" aria-label="加快速度">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
                 </div>
                 <button class="color-replay-btn" id="seqReplayBtn">重播</button>
             </div>
@@ -280,9 +288,13 @@
                     </span>
                 </button>
                 <div class="speed-control">
-                    <button class="speed-btn" id="stroopSpeedDown">◀</button>
+                    <button class="speed-btn" id="stroopSpeedDown" title="減慢速度" aria-label="減慢速度">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>
+                    </button>
                     <span class="speed-display" id="stroopSpeedDisplay">5</span>
-                    <button class="speed-btn" id="stroopSpeedUp">▶</button>
+                    <button class="speed-btn" id="stroopSpeedUp" title="加快速度" aria-label="加快速度">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
                 </div>
             </div>
             <div class="right-group"></div>
@@ -321,6 +333,7 @@
     <script src="js/audio.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/settings-layout.js"></script>
+    <script src="js/layout.js"></script>
     <script src="js/color.js"></script>
     <script src="js/main.js"></script>
     <script src="js/update-flow.js"></script>
