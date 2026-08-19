@@ -115,10 +115,8 @@
         const bgMusicBadge = document.getElementById('bgMusicBadge');
         const sfxBadge = document.getElementById('sfxBadge');
         renderThemeBadge(currentTheme() === 'dark');
-        bgMusicBadge.textContent = '●';
-        bgMusicBadge.style.color = '#42a5f5';
-        sfxBadge.textContent = '●';
-        sfxBadge.style.color = '#42a5f5';
+        bgMusicBadge.classList.add('on');
+        sfxBadge.classList.add('on');
 
         document.addEventListener('click', function initAudioOnClick() {
             if (bgMusicEnabled) {

@@ -36,25 +36,23 @@
         // ---- 側滑選單音效控制 ----
         function toggleBgMusic() {
             bgMusicEnabled = !bgMusicEnabled;
-            const badge = document.getElementById('bgMusicBadge');
             const btn = document.getElementById('slideBgMusicBtn');
             if (bgMusicEnabled) {
-                btn.innerHTML = '🔊 背景音樂 <span class="state-badge" id="bgMusicBadge" style="color:#42a5f5;">●</span>';
+                btn.innerHTML = '🔊 背景音樂 <span class="state-badge on" id="bgMusicBadge"></span>';
                 bgAudio.play().catch(() => {});
                 if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
             } else {
-                btn.innerHTML = '🔇 背景音樂 <span class="state-badge" id="bgMusicBadge" style="color:#888;">○</span>';
+                btn.innerHTML = '🔇 背景音樂 <span class="state-badge" id="bgMusicBadge"></span>';
                 bgAudio.pause();
             }
         }
 
         function toggleSfx() {
             sfxEnabled = !sfxEnabled;
-            const badge = document.getElementById('sfxBadge');
             const btn = document.getElementById('slideSfxBtn');
             if (sfxEnabled) {
-                btn.innerHTML = '🔊 音效 <span class="state-badge" id="sfxBadge" style="color:#42a5f5;">●</span>';
+                btn.innerHTML = '🔊 音效 <span class="state-badge on" id="sfxBadge"></span>';
             } else {
-                btn.innerHTML = '🔇 音效 <span class="state-badge" id="sfxBadge" style="color:#888;">○</span>';
+                btn.innerHTML = '🔇 音效 <span class="state-badge" id="sfxBadge"></span>';
             }
         }

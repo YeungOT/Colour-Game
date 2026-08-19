@@ -11,11 +11,8 @@
         function renderThemeBadge(dark) {
             const btn = document.getElementById('slideThemeBtn');
             if (!btn) return;
-            if (dark) {
-                btn.innerHTML = '☀️ 淺色模式 <span class="state-badge" id="themeBadge" style="color:#42a5f5;">●</span>';
-            } else {
-                btn.innerHTML = '🌑 深色模式 <span class="state-badge" id="themeBadge" style="color:#888;">○</span>';
-            }
+            btn.innerHTML = (dark ? '☀️ 淺色模式' : '🌑 深色模式') +
+                ' <span class="state-badge' + (dark ? ' on' : '') + '" id="themeBadge"></span>';
         }
 
         function toggleTheme() {
