@@ -22,6 +22,17 @@
 </head>
 <body>
 
+
+    <!-- 啟動載入畫面（與 cognitive-training-pwa 相同，使用 🎨 顏色圖示） -->
+    <div id="bootLoader" class="boot-loader" role="status" aria-label="Loading">
+        <div class="boot-loader-content">
+            <img class="boot-loader-brain" src="icons/icon-512.png" alt="" aria-hidden="true" draggable="false" />
+            <div class="boot-loader-track">
+                <div id="bootLoaderProgress" class="boot-loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- 主選單 -->
     <div class="menu-overlay app-screen menu-overlay--center" id="mainMenu">
         <div class="chrome-btn-right">
@@ -312,6 +323,13 @@
     <script src="js/settings-layout.js"></script>
     <script src="js/color.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/sw-register.js"></script>
+    <script src="js/update-flow.js"></script>
+    <script src="js/boot.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            window.CognitiveBoot.start();
+        })();
+    </script>
 </body>
 </html>
