@@ -10,8 +10,8 @@
             gap: calc(24px * var(--ui-scale));
         }
         .color-mode-grid .category-btn { min-height: calc(150px * var(--ui-scale)); }
-        .color-mode-grid .category-btn .icon { font-size: calc(52px * var(--ui-scale)); }
-        .color-mode-grid .category-btn .label { font-size: calc(26px * var(--ui-scale)); }
+        .color-mode-grid .category-btn .icon { font-size: calc(56px * var(--ui-scale)); }
+        .color-mode-grid .category-btn .label { font-size: calc(28px * var(--ui-scale)); }
 
         /* 設定頁 */
         .settings-options {
@@ -26,13 +26,13 @@
             gap: calc(12px * var(--ui-scale));
         }
         .setting-label {
-            font-size: calc(24px * var(--ui-scale));
+            font-size: calc(26px * var(--ui-scale));
             font-weight: 700;
             color: var(--text-color);
             transition: color 0.4s;
         }
         .settings-screen .setting-select {
-            font-size: calc(24px * var(--ui-scale));
+            font-size: calc(26px * var(--ui-scale)) !important;
             font-weight: 600;
             /* 選項文字水平置中；右側預留箭頭空間，避免文字與箭頭重疊 */
             -webkit-appearance: none;
@@ -61,7 +61,7 @@
         }
         .setting-toggle {
             min-width: calc(100px * var(--ui-scale));
-            font-size: calc(20px * var(--ui-scale));
+            font-size: calc(26px * var(--ui-scale));
             font-weight: 700;
             padding: calc(8px * var(--ui-scale)) calc(20px * var(--ui-scale));
             border-radius: calc(30px * var(--ui-scale));
@@ -388,3 +388,12 @@
         }
         [data-theme="dark"] .color-replay-btn { background: #8D6E63; }
         [data-theme="dark"] .color-replay-btn:hover { background: #A1887F; }
+
+        /* 手機橫屏：設定項目文字統一為 17px，避免縮放後過小且不一致 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .setting-label,
+            .settings-screen .setting-select,
+            .setting-toggle {
+                font-size: 17px !important;
+            }
+        }
