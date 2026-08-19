@@ -397,3 +397,17 @@
                 font-size: 17px !important;
             }
         }
+        /* 啟動載入畫面：只顯示 🎨 emoji（無邊框），尺寸加大 */
+        .boot-loader-emoji {
+            font-size: calc(200px * var(--ui-scale));
+            line-height: 1;
+            display: block;
+            user-select: none;
+            pointer-events: none;
+            animation: boot-brain-pulse 3.5s ease-in-out infinite;
+            transform-origin: 50% 55%;
+        }
+        @keyframes boot-brain-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+        }
