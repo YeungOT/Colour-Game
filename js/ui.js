@@ -55,33 +55,14 @@
             });
         }
 
-        // ---- 側滑選單 ----
-        const slideMenu = document.getElementById('slideMenu');
-
-        document.addEventListener('click', function(e) {
-            const btn = e.target.closest('.hamburger-btn');
-            if (btn) {
-                e.stopPropagation();
-                slideMenu.classList.toggle('open');
-            }
-        });
-
-        document.addEventListener('click', function(e) {
-            if (slideMenu.classList.contains('open') &&
-                !slideMenu.contains(e.target) &&
-                !e.target.closest('.hamburger-btn')) {
-                slideMenu.classList.remove('open');
-            }
-        });
-
+        // ---- 側滑選單（開關／拖曳／右緣滑入：js/slide-menu.js）----
         document.getElementById('slideThemeBtn').addEventListener('click', toggleTheme);
         document.getElementById('slideBgMusicBtn').addEventListener('click', toggleBgMusic);
         document.getElementById('slideSfxBtn').addEventListener('click', toggleSfx);
         document.getElementById('slideHomeBtn').addEventListener('click', function() {
-            slideMenu.classList.remove('open');
+            if (window.CognitiveMenu) window.CognitiveMenu.close();
             goToMainMenu();
         });
-
         // ---- 直向鎖定（橫向使用）----
         function updatePortraitLock() {
             const overlay = document.getElementById('portraitLock');

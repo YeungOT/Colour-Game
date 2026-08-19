@@ -73,7 +73,7 @@
 
         function goToMainMenu() {
             stopAllModes();
-            slideMenu.classList.remove('open');
+            if (window.CognitiveMenu) window.CognitiveMenu.close();
             transitionTo(mainMenu, 'screen-home');
             syncTopBarCentering();
         }

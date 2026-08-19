@@ -1,0 +1,252 @@
+        (function () {
+            'use strict';
+
+            // 側滑選單互動（移植自 cognitive-training-pwa js/app-chrome.js 的選單部分）
+            // 包含：漢堡按鈕開關、點外面關閉、拖曳關閉、右緣向右滑開啟、速度吸附、點擊抑制。
+            // 選單項目（主題／音樂／音效／主選單）的處理維持在 ui.js / audio.js / main.js。
+
+            var slideMenu = document.getElementById('slideMenu');
+            var slideMenuBackdrop = document.getElementById('slideMenuBackdrop');
+
+            var EDGE_PX = 48;
+            var DRAG_START_PX = 8;
+            var SNAP_RATIO = 0.5;
+            var VELOCITY_PX_MS = 0.45;
+            var MENU_ANIMATION_MS = 330;
+
+            var menuDrag = null;
+            var menuSuppressClickUntil = 0;
+            var menuAnimating = false;
+            var menuAnimationTimer = null;
+
+            function getUiScale() {
+                var width = window.innerWidth || document.documentElement.clientWidth || 0;
+                var height = window.innerHeight || document.documentElement.clientHeight || 0;
+                if (width <= 0 || height <= 0) return 1;
+                return Math.min(width / 1280, height / 800);
+            }
+
+            function getEdgeWidth() {
+                return EDGE_PX * getUiScale();
+            }
+
+            function getMenuWidth() {
+                if (!slideMenu) return 300;
+                var rect = slideMenu.getBoundingClientRect();
+                return rect.width || 300;
+            }
+
+            function isRightEdgePointer(e) {
+                var viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+                return viewportWidth > 0 && e.clientX >= viewportWidth - getEdgeWidth();
+            }
+
+            function isInteractiveMenuTarget(target) {
+                if (!target || typeof target.closest !== 'function') return false;
+                return !!target.closest(
+                    '.hamburger-btn, .slide-menu, .slide-menu-backdrop, button, select, a, input, textarea, [role="button"]'
+                );
+            }
+
+            function clamp(value, min, max) {
+                return Math.max(min, Math.min(max, value));
+            }
+
+            function clearMenuAnimation() {
+                if (menuAnimationTimer) {
+                    clearTimeout(menuAnimationTimer);
+                    menuAnimationTimer = null;
+                }
+                menuAnimating = false;
+            }
+
+            function finishMenuAnimation() {
+                menuAnimationTimer = null;
+                menuAnimating = false;
+                if (slideMenu) {
+                    slideMenu.classList.remove('dragging');
+                    slideMenu.classList.remove('closing');
+                    slideMenu.style.transform = '';
+                }
+                if (slideMenuBackdrop) slideMenuBackdrop.style.opacity = '';
+            }
+
+            function animateMenuTo(open) {
+                if (!slideMenu) return;
+                clearMenuAnimation();
+                menuDrag = null;
+                menuAnimating = true;
+                slideMenu.classList.remove('dragging');
+                if (open) {
+                    slideMenu.classList.add('open');
+                    slideMenu.classList.remove('closing');
+                    slideMenu.style.transform = '';
+                    if (slideMenuBackdrop) slideMenuBackdrop.style.opacity = '';
+                } else {
+                    slideMenu.classList.remove('open');
+                    slideMenu.classList.add('closing');
+                    slideMenu.style.transform = 'translateX(100%)';
+                    if (slideMenuBackdrop) slideMenuBackdrop.style.opacity = '0';
+                }
+                menuAnimationTimer = setTimeout(finishMenuAnimation, MENU_ANIMATION_MS);
+            }
+
+            function cancelMenuDrag() {
+                if (!menuDrag) return;
+                var wasOpen = slideMenu && slideMenu.classList.contains('open');
+                var dragging = menuDrag.dragging;
+                menuDrag = null;
+                if (dragging) animateMenuTo(wasOpen);
+            }
+
+            function updateMenuDrag(dx) {
+                if (!slideMenu || !slideMenuBackdrop) return;
+                var width = Math.max(1, getMenuWidth());
+                var progress;
+                if (menuDrag.mode === 'open') {
+                    progress = clamp(-dx / width, 0, 1);
+                    slideMenu.style.transform = 'translateX(' + ((1 - progress) * 100) + '%)';
+                    slideMenuBackdrop.style.opacity = String(progress);
+                } else {
+                    progress = clamp(dx / width, 0, 1);
+                    slideMenu.style.transform = 'translateX(' + (progress * 100) + '%)';
+                    slideMenuBackdrop.style.opacity = String(1 - progress);
+                }
+            }
+
+            function finishMenuDrag(clientX) {
+                if (!menuDrag) return;
+                var mode = menuDrag.mode;
+                var wasDragging = menuDrag.dragging;
+                var dx = clientX - menuDrag.startX;
+                var width = Math.max(1, getMenuWidth());
+                var progress;
+                var shouldOpen;
+                if (mode === 'open') {
+                    progress = clamp(-dx / width, 0, 1);
+                    shouldOpen = progress >= SNAP_RATIO || menuDrag.velocity < -VELOCITY_PX_MS;
+                } else {
+                    progress = clamp(dx / width, 0, 1);
+                    shouldOpen = !(progress >= SNAP_RATIO || menuDrag.velocity > VELOCITY_PX_MS);
+                }
+                menuDrag = null;
+                if (wasDragging) {
+                    menuSuppressClickUntil = Date.now() + 500;
+                    animateMenuTo(shouldOpen);
+                }
+            }
+
+            document.addEventListener('pointerdown', function (e) {
+                if (!slideMenu || !slideMenuBackdrop || menuDrag || menuAnimating) return;
+                if (!e.isPrimary) return;
+
+                if (slideMenu.classList.contains('open')) {
+                    if (slideMenu.contains(e.target) || slideMenuBackdrop.contains(e.target)) {
+                        menuDrag = {
+                            mode: 'close',
+                            pointerId: e.pointerId,
+                            startX: e.clientX,
+                            startY: e.clientY,
+                            dragging: false,
+                            velocity: 0,
+                            lastX: e.clientX,
+                            lastTime: Date.now()
+                        };
+                    }
+                    return;
+                }
+
+                if (!isRightEdgePointer(e)) return;
+                if (isInteractiveMenuTarget(e.target)) return;
+
+                menuDrag = {
+                    mode: 'open',
+                    pointerId: e.pointerId,
+                    startX: e.clientX,
+                    startY: e.clientY,
+                    dragging: false,
+                    velocity: 0,
+                    lastX: e.clientX,
+                    lastTime: Date.now()
+                };
+                if (e.cancelable) e.preventDefault();
+                e.stopPropagation();
+                if (document.documentElement &&
+                    typeof document.documentElement.setPointerCapture === 'function') {
+                    try {
+                        document.documentElement.setPointerCapture(e.pointerId);
+                    } catch (error) {}
+                }
+            }, true);
+
+            document.addEventListener('pointermove', function (e) {
+                if (!menuDrag || e.pointerId !== menuDrag.pointerId) return;
+                var dx = e.clientX - menuDrag.startX;
+                var dy = e.clientY - menuDrag.startY;
+                var now = Date.now();
+                var dt = Math.max(1, now - menuDrag.lastTime);
+                var instantVelocity = (e.clientX - menuDrag.lastX) / dt;
+                menuDrag.velocity = menuDrag.velocity * 0.7 + instantVelocity * 0.3;
+                menuDrag.lastX = e.clientX;
+                menuDrag.lastTime = now;
+                if (e.cancelable) e.preventDefault();
+
+                if (!menuDrag.dragging) {
+                    if (Math.abs(dx) < DRAG_START_PX && Math.abs(dy) < DRAG_START_PX) return;
+                    if (Math.abs(dx) < Math.abs(dy)) {
+                        cancelMenuDrag();
+                        return;
+                    }
+                    menuDrag.dragging = true;
+                    slideMenu.classList.add('dragging');
+                }
+                updateMenuDrag(dx);
+            }, { passive: false });
+
+            document.addEventListener('pointerup', function (e) {
+                if (menuDrag && e.pointerId === menuDrag.pointerId) {
+                    finishMenuDrag(e.clientX);
+                }
+            });
+
+            document.addEventListener('pointercancel', function (e) {
+                if (menuDrag && e.pointerId === menuDrag.pointerId) {
+                    cancelMenuDrag();
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (Date.now() < menuSuppressClickUntil) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            }, true);
+
+            document.addEventListener('click', function (e) {
+                var btn = e.target.closest('.hamburger-btn');
+                if (btn) {
+                    e.stopPropagation();
+                    if (slideMenu) animateMenuTo(!slideMenu.classList.contains('open'));
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (slideMenu && slideMenu.classList.contains('open') &&
+                    !slideMenu.contains(e.target) &&
+                    !e.target.closest('.hamburger-btn')) {
+                    animateMenuTo(false);
+                }
+            });
+
+            window.CognitiveMenu = {
+                open: function () {
+                    animateMenuTo(true);
+                },
+                close: function () {
+                    animateMenuTo(false);
+                },
+                isOpen: function () {
+                    return !!(slideMenu && slideMenu.classList.contains('open'));
+                }
+            };
+        })(typeof window !== 'undefined' ? window : globalThis);
