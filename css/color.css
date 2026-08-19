@@ -32,23 +32,32 @@
             transition: color 0.4s;
         }
         .setting-select {
-            font-size: calc(20px * var(--ui-scale));
+            font-size: calc(24px * var(--ui-scale));
             font-weight: 600;
-            padding: calc(8px * var(--ui-scale)) calc(18px * var(--ui-scale));
+            /* 選項文字水平置中；使用自訂箭頭讓文字真正置中（原生箭頭會佔用右側空間） */
+            -webkit-appearance: none;
+            appearance: none;
+            text-align: center !important;
+            text-align-last: center !important;
+            padding: calc(8px * var(--ui-scale)) calc(18px * var(--ui-scale)) !important;
             border-radius: calc(30px * var(--ui-scale));
             border: calc(2px * var(--ui-scale)) solid var(--border-color);
-            background: var(--card-bg);
+            background-color: var(--card-bg);
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 6l4 4 4-4' fill='none' stroke='%238b7a6a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right calc(12px * var(--ui-scale)) center;
+            background-size: calc(16px * var(--ui-scale)) calc(16px * var(--ui-scale));
             color: var(--text-color);
             cursor: pointer;
             outline: none;
             font-family: inherit;
             -webkit-tap-highlight-color: transparent;
-            transition: background 0.3s, border-color 0.3s, color 0.3s;
-            max-height: calc(46px * var(--ui-scale));
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
         [data-theme="dark"] .setting-select {
-            background: #1a1a2e;
+            background-color: #1a1a2e;
             border-color: #42a5f5;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 6l4 4 4-4' fill='none' stroke='%23b0b0c0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
         }
         .setting-toggle {
             min-width: calc(100px * var(--ui-scale));
@@ -98,6 +107,11 @@
             box-shadow: 0 calc(6px * var(--ui-scale)) 0 #0a2a6a;
         }
         [data-theme="dark"] .primary-btn:hover { background: #1565c0; }
+
+        /* 開始按鈕與最後一個選項之間的距離，與副標題到第一個選項的距離一致 */
+        .settings-screen .settings-actions {
+            margin-top: calc(24px * var(--ui-scale));
+        }
 
         /* 出題區 */
         .color-stage {

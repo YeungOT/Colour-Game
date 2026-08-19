@@ -25,25 +25,68 @@
             stopStroopAutoPlay();
         }
 
+        // ---- 畫面切換動畫（與 cognitive-training-pwa 相同：淡入淡出）----
+        const TRANSITION_MS = 200;
+        let transitionTimer = null;
+
+        function findVisibleScreen() {
+            const screens = document.querySelectorAll('.app-screen');
+            for (let i = 0; i < screens.length; i++) {
+                const el = screens[i];
+                if (!el.classList.contains('hidden') && el.style.display !== 'none') return el;
+            }
+            return null;
+        }
+
+        function clearTransitionClasses() {
+            document.body.classList.remove('cognitive-screen-transition', 'screen-forward', 'screen-back', 'screen-home');
+            document.querySelectorAll('.app-screen.screen-from, .app-screen.screen-to')
+                .forEach(el => el.classList.remove('screen-from', 'screen-to'));
+        }
+
+        function transitionTo(targetEl, direction) {
+            clearTimeout(transitionTimer);
+            const fromEl = findVisibleScreen();
+            if (fromEl === targetEl) {
+                clearTransitionClasses();
+                return;
+            }
+            clearTransitionClasses();
+
+            // 先切換底層可見性；動畫類別會以 !important 覆寫為兩者同時可見。
+            if (fromEl) {
+                fromEl.classList.add('hidden');
+                fromEl.style.display = 'none';
+            }
+            targetEl.classList.remove('hidden');
+            targetEl.style.display = 'flex';
+
+            document.body.classList.add('cognitive-screen-transition', direction);
+            if (fromEl) fromEl.classList.add('screen-from');
+            targetEl.classList.add('screen-to');
+
+            transitionTimer = setTimeout(function () {
+                clearTransitionClasses();
+                transitionTimer = null;
+            }, TRANSITION_MS);
+        }
+
         function goToMainMenu() {
             stopAllModes();
-            hideAllScreens();
-            mainMenu.classList.remove('hidden');
             slideMenu.classList.remove('open');
+            transitionTo(mainMenu, 'screen-home');
             syncTopBarCentering();
         }
 
-        function showSettings(settingsId) {
+        function showSettings(settingsId, direction) {
             stopAllModes();
-            hideAllScreens();
-            document.getElementById(settingsId).classList.remove('hidden');
+            transitionTo(document.getElementById(settingsId), direction || 'screen-forward');
             syncTopBarCentering();
         }
 
-        function showGame(gameId, initFn) {
+        function showGame(gameId, initFn, direction) {
             stopAllModes();
-            hideAllScreens();
-            document.getElementById(gameId).style.display = 'flex';
+            transitionTo(document.getElementById(gameId), direction || 'screen-forward');
             initFn();
             syncTopBarCentering();
         }
@@ -56,9 +99,9 @@
         document.getElementById('seqSettingsBackBtn').addEventListener('click', goToMainMenu);
         document.getElementById('stroopSettingsBackBtn').addEventListener('click', goToMainMenu);
 
-        document.getElementById('basicBackBtn').addEventListener('click', () => showSettings('basicSettings'));
-        document.getElementById('seqBackBtn').addEventListener('click', () => showSettings('seqSettings'));
-        document.getElementById('stroopBackBtn').addEventListener('click', () => showSettings('stroopSettings'));
+        document.getElementById('basicBackBtn').addEventListener('click', () => showSettings('basicSettings', 'screen-back'));
+        document.getElementById('seqBackBtn').addEventListener('click', () => showSettings('seqSettings', 'screen-back'));
+        document.getElementById('stroopBackBtn').addEventListener('click', () => showSettings('stroopSettings', 'screen-back'));
 
         document.getElementById('basicStartBtn').addEventListener('click', () => showGame('basicGame', initBasicGame));
         document.getElementById('seqStartBtn').addEventListener('click', () => showGame('seqGame', initSeqGame));
